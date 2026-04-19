@@ -10,6 +10,7 @@ import { MessageBubble } from "./message-bubble.js";
 import { MoodMeter } from "./mood.js";
 import { drawLighting } from "./lighting.js";
 import { Particles } from "./particles.js";
+import { playChime, playPop, setMoodLevel, unlockAudio } from "./audio.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -32,6 +33,7 @@ function update(dt) {
   state.frame++;
   if (state.reactT > 0) state.reactT = Math.max(0, state.reactT - dt);
   state.mood.tick(dt);
+  setMoodLevel(state.mood.value);
   for (const f of state.flowers) f.tick(dt, state.mood.value);
   state.bubble.tick(dt);
   state.particles.tick(dt);
@@ -41,8 +43,11 @@ function onFlowerTap(flower) {
   if (flower.cooldownLeft > 0) return;
   flower.wiggleT = 0.4;
   flower.cooldownLeft = flower.type.cooldown;
+  unlockAudio();
   state.mood.add(flower.type.emotionValue);
   state.reactT = 0.6;
+  playChime(flower.type.emotionValue);
+  playPop();
   const message = flower.pickMessage();
   const anchorX = flower._hit ? flower._hit.x + flower._hit.w / 2 : flower.x;
   const anchorY = flower._hit ? flower._hit.y : flower.y - 10;
