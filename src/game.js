@@ -15,6 +15,7 @@ import { drawMoodMeter, drawFlowerCooldowns } from "./hud.js";
 import { GuidedMode } from "./guided.js";
 import { Journal, mountJournalUI } from "./journal.js";
 import { Breathing } from "./breathing.js";
+import { Weather } from "./weather.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -32,6 +33,7 @@ const state = {
   guided: new GuidedMode(),
   journal: new Journal(),
   breathing: new Breathing(),
+  weather: new Weather(),
   lastFlower: null,
 };
 
@@ -47,6 +49,7 @@ function update(dt) {
   state.particles.tick(dt);
   state.guided.tick(dt);
   state.breathing.tick(dt);
+  state.weather.tick(dt);
 }
 
 function onFlowerTap(flower) {
@@ -54,7 +57,7 @@ function onFlowerTap(flower) {
   flower.wiggleT = 0.4;
   flower.cooldownLeft = flower.type.cooldown;
   unlockAudio();
-  state.mood.add(flower.type.emotionValue);
+  state.mood.add(flower.type.emotionValue + state.weather.warmthBonus());
   state.reactT = 0.6;
   playChime(flower.type.emotionValue);
   playPop();
@@ -81,6 +84,12 @@ attachInput(canvas, () => state.flowers, onFlowerTap, onEmptyTap);
 document.getElementById("btn-breathe")?.addEventListener("click", (e) => {
   state.breathing.toggle();
   e.currentTarget.classList.toggle("active", state.breathing.active);
+  unlockAudio();
+});
+
+document.getElementById("btn-rain")?.addEventListener("click", (e) => {
+  state.weather.toggle();
+  e.currentTarget.classList.toggle("active", state.weather.raining);
   unlockAudio();
 });
 
@@ -123,6 +132,7 @@ function render() {
   drawBackground(ctx, state.t, state.mood.value);
   for (const f of state.flowers) drawFlower(ctx, f);
   drawCharacter(ctx, 230, 178, state.t, state.mood.value, state.reactT);
+  state.weather.draw(ctx);
   drawLighting(ctx, state.mood.value);
   drawFlowerCooldowns(ctx, state.flowers);
   state.particles.draw(ctx);
