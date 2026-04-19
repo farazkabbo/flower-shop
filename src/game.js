@@ -16,6 +16,7 @@ import { GuidedMode } from "./guided.js";
 import { Journal, mountJournalUI } from "./journal.js";
 import { Breathing } from "./breathing.js";
 import { Weather } from "./weather.js";
+import { showDailyBanner } from "./affirmations.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -141,6 +142,8 @@ function render() {
   state.guided.draw(ctx);
   state.bubble.draw(ctx);
 }
+
+showDailyBanner();
 
 let last = performance.now();
 function loop(now) {

@@ -199,3 +199,27 @@ html, body {
   opacity: 0.75;
 }
 .journal-clear:hover { opacity: 1; }
+
+.daily-banner {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translate(-50%, -10px);
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: rgba(255, 230, 240, 0.1);
+  border: 1px solid rgba(255, 179, 198, 0.5);
+  color: var(--ink);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity 600ms ease, transform 600ms ease;
+  z-index: 20;
+  pointer-events: none;
+}
+.daily-banner.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
