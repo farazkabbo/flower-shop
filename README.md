@@ -46,7 +46,50 @@ This isn't just a tapping game. It's **emotional progression**, **visual healing
 
 ## Run
 
-Open `index.html` in any modern browser. That's it.
+Open `index.html` in any modern browser. That's it — no build, no install.
+
+If your browser blocks ES modules on `file://`, serve the folder instead:
+
+```bash
+# Python 3
+python -m http.server 8000
+# then visit http://localhost:8000
+```
+
+## Controls
+
+- **Click a flower** — hear its message, lift the mood, release particles.
+- **Guided Mode** — follow small prompts like "tap 3 calming flowers".
+- **Save ♡** — add the most recent message to your Journal.
+- **Journal** — read back every message you've saved (persisted locally).
+- **Breathe** — opens a paced inhale/hold/exhale guide. Tap during exhale for a tiny calm bonus.
+- **Rain** — switches on a soft drizzle; the shop becomes a shelter, and flowers give a warmth bonus.
+
+## Project layout
+
+```
+index.html          page shell, canvas, HUD buttons
+style.css           cozy DOM styling (fonts, panels, banners)
+src/
+  game.js           entry point, main loop, wiring
+  pixel.js          pixel-art helpers (px, rect, sprite)
+  environment.js    shop backdrop, window, lanterns, dust motes
+  character.js      hijabi shopkeeper sprite + expression states
+  flowers.js        flower types + Flower instances + shop layout
+  flower-render.js  pixel renderers per flower type
+  message-bubble.js speech bubble with typewriter effect
+  mood.js           0–100 meter, state thresholds, smoothing
+  lighting.js       mood-driven color/light overlay
+  particles.js      hearts, sparkles, petals
+  audio.js          Web Audio: chimes, pops, ambient pad
+  hud.js            heart-shaped mood meter + cooldown dimming
+  guided.js         prompt-driven Guided Mode
+  journal.js        localStorage favourites + side panel
+  breathing.js      inhale/hold/exhale guide
+  weather.js        optional rain mode
+  affirmations.js   daily affirmation banner
+  input.js          canvas -> game-space pointer mapping
+```
 
 ## License
 

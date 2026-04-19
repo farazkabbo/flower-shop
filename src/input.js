@@ -33,4 +33,13 @@ export function attachInput(canvas, getFlowers, onTap, onEmptyTap) {
   }
   canvas.addEventListener("mousedown", handle);
   canvas.addEventListener("touchstart", handle, { passive: false });
+
+  canvas.addEventListener("mousemove", (evt) => {
+    const { x, y } = canvasToView(canvas, evt.clientX, evt.clientY);
+    let over = false;
+    for (const f of getFlowers()) {
+      if (hitTest(f, x, y)) { over = true; break; }
+    }
+    canvas.style.cursor = over ? "pointer" : "default";
+  });
 }
