@@ -12,6 +12,7 @@ import { drawLighting } from "./lighting.js";
 import { Particles } from "./particles.js";
 import { playChime, playPop, setMoodLevel, unlockAudio } from "./audio.js";
 import { drawMoodMeter, drawFlowerCooldowns } from "./hud.js";
+import { GuidedMode } from "./guided.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -26,6 +27,7 @@ const state = {
   flowers: createShopFlowers(),
   bubble: new MessageBubble(),
   particles: new Particles(),
+  guided: new GuidedMode(),
 };
 
 function update(dt) {
@@ -38,6 +40,7 @@ function update(dt) {
   for (const f of state.flowers) f.tick(dt, state.mood.value);
   state.bubble.tick(dt);
   state.particles.tick(dt);
+  state.guided.tick(dt);
 }
 
 function onFlowerTap(flower) {
@@ -55,9 +58,16 @@ function onFlowerTap(flower) {
   state.bubble.show(message, anchorX, anchorY);
   state.particles.emit(flower.type.particle, anchorX, anchorY);
   state.particles.emit("hearts", 240, 180);
+  state.guided.onFlowerTapped(flower);
 }
 
 attachInput(canvas, () => state.flowers, onFlowerTap);
+
+document.getElementById("btn-guided")?.addEventListener("click", (e) => {
+  state.guided.toggle();
+  e.currentTarget.classList.toggle("active", state.guided.enabled);
+  unlockAudio();
+});
 
 // Quick hook so other modules (and the console) can nudge the mood.
 window.__bloom = {
@@ -76,6 +86,7 @@ function render() {
   drawFlowerCooldowns(ctx, state.flowers);
   state.particles.draw(ctx);
   drawMoodMeter(ctx, state.mood.value, state.mood.state);
+  state.guided.draw(ctx);
   state.bubble.draw(ctx);
 }
 

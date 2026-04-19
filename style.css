@@ -31,6 +31,14 @@ html, body {
   padding: 16px;
 }
 
+.hud {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .hud .title {
   margin: 0;
   font-size: 22px;
@@ -38,6 +46,31 @@ html, body {
   text-transform: uppercase;
   color: var(--accent);
   text-shadow: 0 0 14px rgba(255, 179, 198, 0.4);
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+.ctrl {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--ink);
+  border: 1px solid rgba(255, 179, 198, 0.4);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.ctrl:hover { background: rgba(255, 179, 198, 0.15); }
+.ctrl.active {
+  background: rgba(255, 179, 198, 0.25);
+  border-color: var(--accent);
+  color: #fff;
 }
 
 .stage {
