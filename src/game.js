@@ -9,6 +9,7 @@ import { attachInput } from "./input.js";
 import { MessageBubble } from "./message-bubble.js";
 import { MoodMeter } from "./mood.js";
 import { drawLighting } from "./lighting.js";
+import { Particles } from "./particles.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -22,6 +23,7 @@ const state = {
   reactT: 0,   // seconds remaining of the "just interacted" bounce
   flowers: createShopFlowers(),
   bubble: new MessageBubble(),
+  particles: new Particles(),
 };
 
 function update(dt) {
@@ -32,6 +34,7 @@ function update(dt) {
   state.mood.tick(dt);
   for (const f of state.flowers) f.tick(dt, state.mood.value);
   state.bubble.tick(dt);
+  state.particles.tick(dt);
 }
 
 function onFlowerTap(flower) {
@@ -44,6 +47,8 @@ function onFlowerTap(flower) {
   const anchorX = flower._hit ? flower._hit.x + flower._hit.w / 2 : flower.x;
   const anchorY = flower._hit ? flower._hit.y : flower.y - 10;
   state.bubble.show(message, anchorX, anchorY);
+  state.particles.emit(flower.type.particle, anchorX, anchorY);
+  state.particles.emit("hearts", 240, 180);
 }
 
 attachInput(canvas, () => state.flowers, onFlowerTap);
@@ -62,6 +67,7 @@ function render() {
   for (const f of state.flowers) drawFlower(ctx, f);
   drawCharacter(ctx, 230, 178, state.t, state.mood.value, state.reactT);
   drawLighting(ctx, state.mood.value);
+  state.particles.draw(ctx);
   state.bubble.draw(ctx);
 }
 
