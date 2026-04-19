@@ -2,7 +2,7 @@
 
 > A calming, interactive pixel-art game about a hijabi girl running a flower shop. Each flower carries a comforting message. Tending to flowers gradually lifts her mood — and the shop blooms with her.
 
-**▶ Play it:** https://farazkabbo.github.io/flower-shop/
+**▶ Play it:** deployed on [Vercel](https://vercel.com/).
 
 ## Concept
 
