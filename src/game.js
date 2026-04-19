@@ -6,6 +6,7 @@ import { drawCharacter } from "./character.js";
 import { createShopFlowers } from "./flowers.js";
 import { drawFlower } from "./flower-render.js";
 import { attachInput } from "./input.js";
+import { MessageBubble } from "./message-bubble.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -18,6 +19,7 @@ const state = {
   mood: 15,    // 0..100 — starts a little sad
   reactT: 0,   // seconds remaining of the "just interacted" bounce
   flowers: createShopFlowers(),
+  bubble: new MessageBubble(),
 };
 
 function update(dt) {
@@ -26,6 +28,7 @@ function update(dt) {
   state.frame++;
   if (state.reactT > 0) state.reactT = Math.max(0, state.reactT - dt);
   for (const f of state.flowers) f.tick(dt, state.mood);
+  state.bubble.tick(dt);
 }
 
 function onFlowerTap(flower) {
@@ -34,6 +37,10 @@ function onFlowerTap(flower) {
   flower.cooldownLeft = flower.type.cooldown;
   state.mood = Math.min(100, state.mood + flower.type.emotionValue);
   state.reactT = 0.6;
+  const message = flower.pickMessage();
+  const anchorX = flower._hit ? flower._hit.x + flower._hit.w / 2 : flower.x;
+  const anchorY = flower._hit ? flower._hit.y : flower.y - 10;
+  state.bubble.show(message, anchorX, anchorY);
 }
 
 attachInput(canvas, () => state.flowers, onFlowerTap);
@@ -52,6 +59,7 @@ function render() {
   drawBackground(ctx, state.t, state.mood);
   for (const f of state.flowers) drawFlower(ctx, f);
   drawCharacter(ctx, 230, 178, state.t, state.mood, state.reactT);
+  state.bubble.draw(ctx);
 }
 
 let last = performance.now();
