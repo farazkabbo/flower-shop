@@ -22,6 +22,46 @@ const PAL = {
   lanternOff: "#6a5a3d",
 };
 
+/** Pre-seeded positions for the drifting dust / sparkle motes so they
+ *  don't jitter every frame. */
+const MOTES = Array.from({ length: 24 }, (_, i) => ({
+  x: (i * 53) % 480,
+  y: ((i * 97) % 140) + 20,
+  phase: (i * 1.37) % (Math.PI * 2),
+  speed: 0.3 + (i % 5) * 0.08,
+}));
+
+function drawMotes(ctx, t, mood) {
+  const lit = mood > 50;
+  const color = lit
+    ? `rgba(255, 240, 180, ${(0.25 + (mood - 50) / 200).toFixed(3)})`
+    : "rgba(180, 170, 200, 0.12)";
+  ctx.fillStyle = color;
+  for (const m of MOTES) {
+    const dx = Math.sin(t * m.speed + m.phase) * 10;
+    const dy = Math.cos(t * m.speed * 0.7 + m.phase) * 6;
+    ctx.fillRect((m.x + dx) | 0, (m.y + dy) | 0, 1, 1);
+    if (lit && Math.sin(t * 4 + m.phase) > 0.8) {
+      ctx.fillRect((m.x + dx + 1) | 0, (m.y + dy) | 0, 1, 1);
+      ctx.fillRect((m.x + dx) | 0, (m.y + dy + 1) | 0, 1, 1);
+    }
+  }
+}
+
+function drawHangingBud(ctx, x, y, mood) {
+  rect(ctx, x, 0, 1, y, "#5e3a24");
+  const open = Math.max(0, (mood - 30) / 70);
+  if (open < 0.1) {
+    rect(ctx, x - 1, y, 3, 3, "#6b8f5a");
+  } else {
+    const r = 1 + Math.round(open * 2);
+    rect(ctx, x - r, y - 1, r * 2 + 1, 3, "#ff9ec4");
+    if (open > 0.5) {
+      rect(ctx, x - r + 1, y, r * 2 - 1, 1, "#ffd0e0");
+    }
+  }
+}
+
 export function drawBackground(ctx, t, mood) {
   rect(ctx, 0, 0, 480, 160, PAL.wallTop);
   rect(ctx, 0, 80, 480, 80, PAL.wallMid);
@@ -44,6 +84,13 @@ export function drawBackground(ctx, t, mood) {
 
   drawLantern(ctx, 90, 30, mood);
   drawLantern(ctx, 390, 30, mood);
+
+  drawHangingBud(ctx, 140, 24, mood);
+  drawHangingBud(ctx, 160, 34, mood);
+  drawHangingBud(ctx, 320, 24, mood);
+  drawHangingBud(ctx, 340, 34, mood);
+
+  drawMotes(ctx, t, mood);
 }
 
 function drawWindow(ctx, x, y, mood) {
