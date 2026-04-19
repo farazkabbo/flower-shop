@@ -14,6 +14,7 @@ import { playChime, playPop, setMoodLevel, unlockAudio } from "./audio.js";
 import { drawMoodMeter, drawFlowerCooldowns } from "./hud.js";
 import { GuidedMode } from "./guided.js";
 import { Journal, mountJournalUI } from "./journal.js";
+import { Breathing } from "./breathing.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -30,6 +31,7 @@ const state = {
   particles: new Particles(),
   guided: new GuidedMode(),
   journal: new Journal(),
+  breathing: new Breathing(),
   lastFlower: null,
 };
 
@@ -44,6 +46,7 @@ function update(dt) {
   state.bubble.tick(dt);
   state.particles.tick(dt);
   state.guided.tick(dt);
+  state.breathing.tick(dt);
 }
 
 function onFlowerTap(flower) {
@@ -65,7 +68,21 @@ function onFlowerTap(flower) {
   state.lastFlower = flower;
 }
 
-attachInput(canvas, () => state.flowers, onFlowerTap);
+function onEmptyTap() {
+  const lift = state.breathing.onTap();
+  if (lift > 0) {
+    state.mood.add(lift);
+    state.particles.emit("sparkles", 240, 135);
+  }
+}
+
+attachInput(canvas, () => state.flowers, onFlowerTap, onEmptyTap);
+
+document.getElementById("btn-breathe")?.addEventListener("click", (e) => {
+  state.breathing.toggle();
+  e.currentTarget.classList.toggle("active", state.breathing.active);
+  unlockAudio();
+});
 
 document.getElementById("btn-guided")?.addEventListener("click", (e) => {
   state.guided.toggle();
@@ -109,6 +126,7 @@ function render() {
   drawLighting(ctx, state.mood.value);
   drawFlowerCooldowns(ctx, state.flowers);
   state.particles.draw(ctx);
+  state.breathing.draw(ctx);
   drawMoodMeter(ctx, state.mood.value, state.mood.state);
   state.guided.draw(ctx);
   state.bubble.draw(ctx);

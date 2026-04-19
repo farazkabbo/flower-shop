@@ -17,7 +17,7 @@ function hitTest(flower, px, py) {
   return px >= h.x && px <= h.x + h.w && py >= h.y && py <= h.y + h.h;
 }
 
-export function attachInput(canvas, getFlowers, onTap) {
+export function attachInput(canvas, getFlowers, onTap, onEmptyTap) {
   function handle(evt) {
     const src = evt.touches ? evt.touches[0] : evt;
     if (!src) return;
@@ -29,6 +29,7 @@ export function attachInput(canvas, getFlowers, onTap) {
         return;
       }
     }
+    onEmptyTap?.(x, y);
   }
   canvas.addEventListener("mousedown", handle);
   canvas.addEventListener("touchstart", handle, { passive: false });
