@@ -1,6 +1,7 @@
 // src/game.js — entry point. Sets up the canvas and runs the game loop.
 
 import { VIEW_W, VIEW_H, rect } from "./pixel.js";
+import { drawBackground } from "./environment.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -20,7 +21,7 @@ function update(dt) {
 
 function render() {
   rect(ctx, 0, 0, VIEW_W, VIEW_H, "#0d0b14");
-  rect(ctx, 0, VIEW_H - 40, VIEW_W, 40, "#1f1830");
+  drawBackground(ctx, state.t, 20);
 }
 
 let last = performance.now();
