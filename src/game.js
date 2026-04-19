@@ -12,18 +12,30 @@ const state = {
   t: 0,        // total time in seconds
   dt: 0,       // delta time since last frame
   frame: 0,    // integer frame counter
+  mood: 15,    // 0..100 — starts a little sad
+  reactT: 0,   // seconds remaining of the "just interacted" bounce
 };
 
 function update(dt) {
   state.dt = dt;
   state.t += dt;
   state.frame++;
+  if (state.reactT > 0) state.reactT = Math.max(0, state.reactT - dt);
 }
+
+// Quick hook so other modules (and the console) can nudge the mood.
+window.__bloom = {
+  cheer(amount = 10) {
+    state.mood = Math.min(100, state.mood + amount);
+    state.reactT = 0.6;
+  },
+  setMood(m) { state.mood = Math.max(0, Math.min(100, m)); },
+};
 
 function render() {
   rect(ctx, 0, 0, VIEW_W, VIEW_H, "#0d0b14");
-  drawBackground(ctx, state.t, 20);
-  drawCharacter(ctx, 230, 178, state.t);
+  drawBackground(ctx, state.t, state.mood);
+  drawCharacter(ctx, 230, 178, state.t, state.mood, state.reactT);
 }
 
 let last = performance.now();
