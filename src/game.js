@@ -2,6 +2,7 @@
 
 import { VIEW_W, VIEW_H, rect } from "./pixel.js";
 import { drawBackground } from "./environment.js";
+import { drawCharacter } from "./character.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -22,6 +23,7 @@ function update(dt) {
 function render() {
   rect(ctx, 0, 0, VIEW_W, VIEW_H, "#0d0b14");
   drawBackground(ctx, state.t, 20);
+  drawCharacter(ctx, 230, 178, state.t);
 }
 
 let last = performance.now();
