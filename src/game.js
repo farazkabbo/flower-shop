@@ -5,6 +5,7 @@ import { drawBackground } from "./environment.js";
 import { drawCharacter } from "./character.js";
 import { createShopFlowers } from "./flowers.js";
 import { drawFlower } from "./flower-render.js";
+import { attachInput } from "./input.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -26,6 +27,16 @@ function update(dt) {
   if (state.reactT > 0) state.reactT = Math.max(0, state.reactT - dt);
   for (const f of state.flowers) f.tick(dt, state.mood);
 }
+
+function onFlowerTap(flower) {
+  if (flower.cooldownLeft > 0) return;
+  flower.wiggleT = 0.4;
+  flower.cooldownLeft = flower.type.cooldown;
+  state.mood = Math.min(100, state.mood + flower.type.emotionValue);
+  state.reactT = 0.6;
+}
+
+attachInput(canvas, () => state.flowers, onFlowerTap);
 
 // Quick hook so other modules (and the console) can nudge the mood.
 window.__bloom = {
