@@ -2,6 +2,8 @@
 
 > A calming, interactive pixel-art game about a hijabi girl running a flower shop. Each flower carries a comforting message. Tending to flowers gradually lifts her mood — and the shop blooms with her.
 
+**▶ Play it:** https://farazkabbo.github.io/flower-shop/
+
 ## Concept
 
 Tap a flower 🌼 → it whispers a kind message 💬 → the girl's mood shifts 😊 → hearts bloom ❤️ → the shop grows more vibrant 🌷✨
