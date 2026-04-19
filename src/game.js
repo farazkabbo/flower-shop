@@ -8,6 +8,7 @@ import { drawFlower } from "./flower-render.js";
 import { attachInput } from "./input.js";
 import { MessageBubble } from "./message-bubble.js";
 import { MoodMeter } from "./mood.js";
+import { drawLighting } from "./lighting.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -60,6 +61,7 @@ function render() {
   drawBackground(ctx, state.t, state.mood.value);
   for (const f of state.flowers) drawFlower(ctx, f);
   drawCharacter(ctx, 230, 178, state.t, state.mood.value, state.reactT);
+  drawLighting(ctx, state.mood.value);
   state.bubble.draw(ctx);
 }
 
