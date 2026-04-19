@@ -13,6 +13,7 @@ import { Particles } from "./particles.js";
 import { playChime, playPop, setMoodLevel, unlockAudio } from "./audio.js";
 import { drawMoodMeter, drawFlowerCooldowns } from "./hud.js";
 import { GuidedMode } from "./guided.js";
+import { Journal, mountJournalUI } from "./journal.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -28,6 +29,8 @@ const state = {
   bubble: new MessageBubble(),
   particles: new Particles(),
   guided: new GuidedMode(),
+  journal: new Journal(),
+  lastFlower: null,
 };
 
 function update(dt) {
@@ -59,6 +62,7 @@ function onFlowerTap(flower) {
   state.particles.emit(flower.type.particle, anchorX, anchorY);
   state.particles.emit("hearts", 240, 180);
   state.guided.onFlowerTapped(flower);
+  state.lastFlower = flower;
 }
 
 attachInput(canvas, () => state.flowers, onFlowerTap);
@@ -67,6 +71,26 @@ document.getElementById("btn-guided")?.addEventListener("click", (e) => {
   state.guided.toggle();
   e.currentTarget.classList.toggle("active", state.guided.enabled);
   unlockAudio();
+});
+
+const journalUI = mountJournalUI(state.journal);
+document.getElementById("btn-journal")?.addEventListener("click", () => {
+  journalUI.toggle();
+});
+
+const saveBtn = document.getElementById("btn-save");
+saveBtn?.addEventListener("click", () => {
+  const msg = state.bubble.text;
+  const flower = state.lastFlower;
+  if (!msg || !flower) return;
+  const added = state.journal.add(flower.type, msg);
+  saveBtn.classList.toggle("active", added);
+  saveBtn.textContent = added ? "Saved ✓" : "Already saved";
+  setTimeout(() => {
+    saveBtn.textContent = "Save ♡";
+    saveBtn.classList.remove("active");
+  }, 1200);
+  journalUI.refresh();
 });
 
 // Quick hook so other modules (and the console) can nudge the mood.
