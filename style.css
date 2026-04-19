@@ -1,0 +1,70 @@
+/* Bloom Within — base styling
+ * Warm, soft, cozy pastel palette. The canvas is pixel-crisp. */
+
+:root {
+  --bg-0: #1a1624;
+  --bg-1: #2a2038;
+  --ink: #f5e9e0;
+  --accent: #ffb3c6;
+  --accent-2: #cdb4db;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: radial-gradient(ellipse at top, var(--bg-1), var(--bg-0) 70%);
+  color: var(--ink);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+}
+
+#app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
+}
+
+.hud .title {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-shadow: 0 0 14px rgba(255, 179, 198, 0.4);
+}
+
+.stage {
+  position: relative;
+  padding: 8px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.2));
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+#game {
+  display: block;
+  width: min(96vw, 960px);
+  height: auto;
+  aspect-ratio: 16 / 9;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #0d0b14;
+}
+
+.hint p {
+  margin: 0;
+  opacity: 0.7;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+}
