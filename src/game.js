@@ -11,6 +11,7 @@ import { MoodMeter } from "./mood.js";
 import { drawLighting } from "./lighting.js";
 import { Particles } from "./particles.js";
 import { playChime, playPop, setMoodLevel, unlockAudio } from "./audio.js";
+import { drawMoodMeter, drawFlowerCooldowns } from "./hud.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -72,7 +73,9 @@ function render() {
   for (const f of state.flowers) drawFlower(ctx, f);
   drawCharacter(ctx, 230, 178, state.t, state.mood.value, state.reactT);
   drawLighting(ctx, state.mood.value);
+  drawFlowerCooldowns(ctx, state.flowers);
   state.particles.draw(ctx);
+  drawMoodMeter(ctx, state.mood.value, state.mood.state);
   state.bubble.draw(ctx);
 }
 
